@@ -1,16 +1,21 @@
 package org.example;
 
+import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 public class BlockingQueue {
     private Queue<Runnable> queue;
+    private int size;
 
     public BlockingQueue(int size) {
-        this.queue = new ArrayBlockingQueue<>(size);
+        this.queue = new LinkedList<>();
+        this.size = size;
     }
 
-    public synchronized void enqueue(Runnable runnable) {
+    public synchronized void enqueue(Runnable runnable) throws IllegalArgumentException {
+        if (queue.size() == size) {
+            throw new IllegalArgumentException();
+        }
         queue.add(runnable);
         notifyAll();
     }
@@ -27,6 +32,6 @@ public class BlockingQueue {
     }
 
     public int size() {
-        return this.queue.size();
+        return queue.size();
     }
 }

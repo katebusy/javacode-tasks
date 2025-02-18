@@ -8,10 +8,13 @@ public class Main {
             while (true) {
                 try {
                     Thread.sleep(3000);
+                    blockingQueue.enqueue(task);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException("BlockingQueue is full!");
                 }
-                blockingQueue.enqueue(task);
+
             }
         });
         Thread thread2 = new Thread(() -> {
