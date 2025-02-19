@@ -18,19 +18,12 @@ public class ConcurrentBank {
         return account;
     }
 
-    public synchronized void transfer(BankAccount account1, BankAccount account2, BigDecimal sum) {
-        BigDecimal startingBalance1 = account1.getBalance();
-        BigDecimal startingBalance2 = account2.getBalance();
-        if (startingBalance1.compareTo(sum) >= 0) {
-            try {
-                account1.withdraw(sum);
-                account2.deposit(sum);
-            } catch (Exception e) {
-                account1.deposit(startingBalance1.subtract(sum));
-                account2.withdraw(startingBalance2.subtract(sum));
-                throw new RuntimeException(e);
-            }
-
+    public void transfer(BankAccount account1, BankAccount account2, BigDecimal sum) {
+        synchronized (account1.getAccountId().compareTo(account2.getAccountId()) < 0
+                ? account1
+                : account2) {
+            account1.withdraw(sum);
+            account2.deposit(sum);
         }
     }
 
