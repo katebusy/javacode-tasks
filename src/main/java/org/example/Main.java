@@ -3,16 +3,14 @@ package org.example;
 public class Main {
     public static void main(String[] args) {
         Runnable task = () -> System.out.println(Math.random() * 10);
-        BlockingQueue blockingQueue = new BlockingQueue(4);
+        BlockingQueue<Runnable> blockingQueue = new BlockingQueue<>(4);
         Thread thread1 = new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(1000);
                     blockingQueue.enqueue(task);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
-                } catch (IllegalArgumentException e) {
-                    throw new IllegalArgumentException("BlockingQueue is full!");
                 }
 
             }
@@ -20,7 +18,7 @@ public class Main {
         Thread thread2 = new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

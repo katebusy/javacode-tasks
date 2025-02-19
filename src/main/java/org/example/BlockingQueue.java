@@ -3,8 +3,8 @@ package org.example;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class BlockingQueue {
-    private Queue<Runnable> queue;
+public class BlockingQueue<T> {
+    private Queue<T> queue;
     private int size;
 
     public BlockingQueue(int size) {
@@ -12,15 +12,20 @@ public class BlockingQueue {
         this.size = size;
     }
 
-    public synchronized void enqueue(Runnable runnable) throws IllegalArgumentException {
+    public synchronized void enqueue(T element) throws IllegalArgumentException {
         if (queue.size() == size) {
-            throw new IllegalArgumentException();
+            System.out.println("Очередь заполнена");
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
-        queue.add(runnable);
-        notifyAll();
+        queue.add(element);
+        notify();
     }
 
-    public synchronized Runnable dequeue() {
+    public synchronized T dequeue() {
         if (queue.isEmpty()) {
             try {
                 wait();
@@ -28,10 +33,12 @@ public class BlockingQueue {
                 throw new RuntimeException(e);
             }
         }
-        return queue.poll();
+        T element = queue.poll();
+        notifyAll();
+        return element;
     }
 
-    public int size() {
+    public synchronized int size() {
         return queue.size();
     }
 }
