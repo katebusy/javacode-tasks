@@ -19,11 +19,11 @@ public class Main {
             while (true) {
                 try {
                     Thread.sleep(3000);
+                    System.out.println("Ждем");
+                    blockingQueue.dequeue().run();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                System.out.println("Ждем");
-                blockingQueue.dequeue().run();
             }
         });
         thread1.start();

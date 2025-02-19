@@ -12,26 +12,18 @@ public class BlockingQueue<T> {
         this.size = size;
     }
 
-    public synchronized void enqueue(T element) throws IllegalArgumentException {
-        if (queue.size() == size) {
+    public synchronized void enqueue(T element) throws InterruptedException {
+        while (queue.size() == size) {
             System.out.println("Очередь заполнена");
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            wait();
         }
         queue.add(element);
         notify();
     }
 
-    public synchronized T dequeue() {
-        if (queue.isEmpty()) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+    public synchronized T dequeue() throws InterruptedException {
+        while (queue.isEmpty()) {
+            wait();
         }
         T element = queue.poll();
         notifyAll();
