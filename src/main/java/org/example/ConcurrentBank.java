@@ -19,11 +19,15 @@ public class ConcurrentBank {
     }
 
     public void transfer(BankAccount account1, BankAccount account2, BigDecimal sum) {
-        synchronized (account1.getAccountId().compareTo(account2.getAccountId()) < 0
-                ? account1
-                : account2) {
-            account1.withdraw(sum);
-            account2.deposit(sum);
+        BankAccount first = account1.getAccountId().compareTo(account2.getAccountId()) < 0 ? account1 : account2;
+        BankAccount second = account1.getAccountId().compareTo(account2.getAccountId()) < 0 ? account2 : account1;
+        synchronized (first) {
+            synchronized (second) {
+                if (account1.getBalance().compareTo(sum) >= 0) {
+                    account1.withdraw(sum);
+                    account2.deposit(sum);
+                }
+            }
         }
     }
 
