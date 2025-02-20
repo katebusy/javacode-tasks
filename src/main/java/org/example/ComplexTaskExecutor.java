@@ -13,7 +13,7 @@ public class ComplexTaskExecutor {
     public ComplexTaskExecutor(int numberOfTasks) {
         this.numberOfTasks = numberOfTasks;
         this.executorService = Executors.newFixedThreadPool(numberOfTasks);
-        this.results = new ArrayList<>();
+        this.results = new CopyOnWriteArrayList<>();
         this.barrier = new CyclicBarrier(numberOfTasks, () -> {
             System.out.println("All tasks completed. Merging results...");
             int totalResult = results.stream().mapToInt(Integer::intValue).sum();
