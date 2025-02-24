@@ -15,7 +15,7 @@ public class Main {
         );
 
         Map<String, Double> averageGrades = students.parallelStream()
-                .flatMap(student -> student.getGrades().entrySet().parallelStream())
+                .flatMap(student -> student.getGrades().entrySet().stream())
                 .collect(Collectors.groupingBy(
                         Map.Entry::getKey,
                         Collectors.averagingInt(Map.Entry::getValue)
